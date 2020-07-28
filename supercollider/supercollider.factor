@@ -3,7 +3,7 @@ USING: io.sockets kernel namespaces osc ;
 IN: supercollider
 
 SYMBOL: sc-timeout
-sc-timeout [ 3 seconds ] initialize
+sc-timeout [ 1 seconds ] initialize
 
 SYMBOL: sc-server
 sc-server [ "127.0.0.1" 57110 <inet4> ] initialize
@@ -18,6 +18,9 @@ SYMBOL: sc-socket
 : (send-msg) ( addr params -- )
     osc-message sc-server get sc-socket get send ;
 
-: send-msg ( addr params -- response )
+: from-sc-server? ( addr-spec -- ? )
+    sc-server get = ;
+
+: send-msg ( addr params -- addr params )
     (send-msg)
-    sc-socket get receive 2array ;
+    sc-socket get receive from-sc-server? [ osc> ] [ drop f f ] if ;
