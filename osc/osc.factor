@@ -57,6 +57,7 @@ ERROR: unknown-osc-type-tag tag ;
     { { CHAR: s [ unclip-osc-string ] }
       { CHAR: i [ 4 cut swap "i" unpack-be first ] }
       { CHAR: f [ 4 cut swap "f" unpack-be first ] }
+      { CHAR: d [ 8 cut swap "d" unpack-be first ] }
       { CHAR: t [ 8 cut swap "II" unpack-be first2 32 2^ / + seconds reftime time+ ] }
       [ unknown-osc-type-tag ]
     } case ;
