@@ -34,7 +34,7 @@ M: immediately >osc*
 ! M: sequence >osc*
 
 : >osc ( seq -- bytes tag-str )
-    [ B{  } "" ]
+    [ B{  } "," ]
     [ [ >osc* ] [ swapd [ append ] 2dip append ] map-reduce "," prepend ]
     if-empty
     ;
@@ -45,7 +45,7 @@ M: immediately >osc*
 : osc-bundle ( timestamp elts -- bytes )
     [ "#bundle" >osc* drop ] 2dip
     [ >osc* drop ] dip
-    [ [ length 1array "I" pack ] keep append ] map concat append append ;
+    [ [ length 1array "I" pack-be ] keep append ] map concat append append ;
 
 ! * Decoding
 : unclip-osc-string ( data -- data' string/f )
