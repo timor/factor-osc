@@ -34,10 +34,10 @@ M: immediately >osc*
 ! M: sequence >osc*
 
 : >osc ( seq -- bytes tag-str )
-    [ B{  } "," ]
-    [ [ >osc* ] [ swapd [ append ] 2dip append ] map-reduce "," prepend ]
-    if-empty
-    ;
+    [ B{ } "," ]
+    [ [ >osc* 2array ] map flip
+      [ first concat ] [ last concat ] bi "," prepend ]
+    if-empty ;
 
 : osc-message ( pattern args -- bytes )
     [ >osc* drop ] [ >osc >osc* drop ] bi* swap append append ;
