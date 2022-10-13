@@ -11,9 +11,9 @@ GENERIC: >osc* ( obj -- data type-tag )
 M: object >osc* >byte-array "b" ;
 M: string >osc* pad-osc-string "s" ;
 M: fixnum >osc* 1array "i" pack-be "i" ;
-! M: float >osc* write-float "f" ;
+M: float >osc* big-endian [ write-float ] with-endianness "f" ;
 ! M: float >osc* big-endian [ write-double ] with-endianness "d" ;
-M: float >osc* 1array "d" pack-be "d" ;
+! M: float >osc* 1array "d" pack-be "d" ;
 M: boolean >osc* "T" "F" ? B{ } swap ;
 M: +nil+ >osc* drop B{ } "N" ;
 CONSTANT: reftime T{ timestamp
@@ -34,10 +34,10 @@ M: immediately >osc*
 ! M: sequence >osc*
 
 : >osc ( seq -- bytes tag-str )
-    [ B{  } "," ]
-    [ [ >osc* ] [ swapd [ append ] 2dip append ] map-reduce "," prepend ]
-    if-empty
-    ;
+    [ B{ } "," ]
+    [ [ >osc* 2array ] map flip
+      [ first concat ] [ last concat ] bi "," prepend ]
+    if-empty ;
 
 : osc-message ( pattern args -- bytes )
     [ >osc* drop ] [ >osc >osc* drop ] bi* swap append append ;
